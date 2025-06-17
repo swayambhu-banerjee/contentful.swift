@@ -182,10 +182,10 @@ open class Client {
         }
 
         let task = fetchData(url: url) { dataResult in
-            if url.lastPathComponent == "locales" || url.lastPathComponent == self.spaceId {
+           // if url.lastPathComponent == "locales" || url.lastPathComponent == self.spaceId {
                 // Now that we have all the locale information, start callback chain.
                 finishDataFetch(dataResult)
-            } else {
+           /* } else {
                 self.fetchLocalesIfNecessary { localesResult in
                     switch localesResult {
                     case .success:
@@ -196,7 +196,7 @@ open class Client {
                         finishDataFetch(.failure(error))
                     }
                 }
-            }
+            }*/
         }
         return task
     }
@@ -246,9 +246,9 @@ open class Client {
                     ContentfulLogger.log(.info, message: successMessage)
                 }
                 // Hardcoded the response to identify the issue
-                if let hardCodedURL = Bundle.main.url(forResource: "Contentful_Response", withExtension: "json") {
+                if let url = Bundle.main.url(forResource: "Contentful_Response", withExtension: "json") {
                     do {
-                        data = try Data(contentsOf: hardCodedURL)
+                        data = try Data(contentsOf: url)
                     } catch {
                         print("Failed to load or parse JSON: \(error)")
                     }
