@@ -246,9 +246,9 @@ open class Client {
                     ContentfulLogger.log(.info, message: successMessage)
                 }
                 // Hardcoded the response to identify the issue
-                if let localURL = Bundle.main.url(forResource: "Contentful_Response", withExtension: "json") {
+                if let hardCodedURL = Bundle.main.url(forResource: "Contentful_Response", withExtension: "json") {
                     do {
-                        data = try Data(contentsOf: localURL)
+                        data = try Data(contentsOf: hardCodedURL)
                     } catch {
                         print("Failed to load or parse JSON: \(error)")
                     }
