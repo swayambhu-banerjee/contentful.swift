@@ -246,14 +246,14 @@ open class Client {
                     ContentfulLogger.log(.info, message: successMessage)
                 }
                 // Hardcoded the response to identify the issue
-                if let url = Bundle.main.url(forResource: "Contentful_Response", withExtension: "json") {
+                if let url = Bundle.main.url(forResource: "Contentful_Local_Response", withExtension: "json") {
                     do {
                         data = try Data(contentsOf: url)
                     } catch {
-                        print("Failed to load or parse JSON: \(error)")
+                        debugPrint("Failed to load or parse JSON: \(error)")
                     }
                 } else {
-                    print("Failed to locate file in bundle.")
+                    debugPrint("Failed to locate file in bundle.")
                 }
                 completion(Result.success(data))
                 return
@@ -471,7 +471,10 @@ open class Client {
 
     private func handleJSON<DecodableType: Decodable>(data: Data) -> Result<DecodableType, Error> {
         let jsonDecoder = jsonDecoderBuilder.build()
-
+        let startDate = Date()
+        debugPrint("********************************")
+        debugPrint("Start time parsing JSON: \(startDate)")
+        
         var decodedObject: DecodableType?
         do {
             decodedObject = try jsonDecoder.decode(DecodableType.self, from: data)
@@ -494,6 +497,12 @@ open class Client {
 
         // Make sure decoded object is not nil before calling success completion block.
         if let decodedObject = decodedObject {
+            let endDate = Date()
+            debugPrint("********************************")
+            debugPrint("End time parsing JSON: \(endDate)")
+            debugPrint("********************************")
+            debugPrint("Time to parse JSON: \(endDate.timeIntervalSince(startDate)) seconds\n")
+            debugPrint("********************************")
             return .success(decodedObject)
         } else {
             let error = SDKError.unparseableJSON(
