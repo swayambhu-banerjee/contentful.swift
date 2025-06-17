@@ -205,7 +205,7 @@ open class Client {
         let jsonDecoder = jsonDecoderBuilder.build()
 
         let task = urlSession.dataTask(with: url) { data, response, error in
-            if let data = data {
+            if var data = data {
                 if self.didHandleRateLimitError(
                     data: data,
                     response: response,
@@ -244,6 +244,16 @@ open class Client {
                     }
                     let successMessage = "Success: 'GET' (\(response.statusCode)) \(url.absoluteString)"
                     ContentfulLogger.log(.info, message: successMessage)
+                }
+                // Hardcoded the response to identify the issue
+                if let url = Bundle.main.url(forResource: "Contentful_Response", withExtension: "json") {
+                    do {
+                        data = try Data(contentsOf: url)
+                    } catch {
+                        print("Failed to load or parse JSON: \(error)")
+                    }
+                } else {
+                    print("Failed to locate file in bundle.")
                 }
                 completion(Result.success(data))
                 return
